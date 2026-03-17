@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Agent</title>
+
+{% load static %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+body{overflow-x:hidden;}
+
+.navbar{background-color:lightskyblue;}
+.navbar-brand{font-family:Cambria,Georgia,serif;}
+.nav-link{color:black!important;font-weight:600;}
+
+#agentForm{
+    max-width:650px;
+    margin:30px auto;
+    padding:25px;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+small{font-size:13px}
+.is-valid{border-color:#198754!important;}
+.is-invalid{border-color:#dc3545!important;}
+
+/* Footer */
+.footer{background-color:lightskyblue;padding:40px 0;}
+.footer h5{font-weight:bold;margin-bottom:15px;}
+.footer a{color:black;text-decoration:none;display:block;margin-bottom:6px;}
+.footer a:hover{text-decoration:underline;}
+
+.payment-logo{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px;
+}
+.payment-logo img{width:80px}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+<div class="container">
+<a class="navbar-brand fw-bold" href="#">
+<img src="{% static 'images/logos.png' %}" height="45" class="rounded">
+INSURANCE
+</a>
+
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="{% url 'admindash' %}">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_agent' %}">Add Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_agent' %}">View Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_campaign' %}">Add Campaign</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_campaign' %}">View Campaigns</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'client_view' %}">View Client</a></li>
+<li class="nav-item ms-2">
+<a href="{% url 'logout' %}" class="btn btn-primary">
+<i class="fa-solid fa-user"></i> LOGOUT
+</a>
+</li>
+</ul>
+</div>
+</div>
+</nav><br>
+{% if messages %}
+        <div class="alert alert-info alert-dismissible" style="width: 100%; margin-bottom: 15px;">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<!-- FORM -->
+<form method="POST" enctype="multipart/form-data" id="agentForm">
+{% csrf_token %}
+<h4 class="text-center mb-3">Agent Details</h4>
+
+<div class="mb-3">
+<label>First Name</label>
+<input type="text" id="first_name" name="first_name" class="form-control">
+<small class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Last Name</label>
+<input type="text" id="last_name" name="last_name" class="form-control">
+<small class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Username</label>
+<input type="text" id="username" name="username" class="form-control">
+<small class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Email</label>
+<input type="email" id="email" name="email" class="form-control">
+<small class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Phone</label>
+<input type="text" id="phone" name="phone" class="form-control">
+<small class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Profile Image</label>
+<input type="file" name="profile_image" class="form-control">
+</div>
+
+<div class="mb-3">
+<label>Age</label>
+<input type="number" id="age" name="age" class="form-control">
+<small class="text-danger"></small>
+</div>
+
+<div class="mb-3">
+<label>Qualification</label>
+<select name="qualification" class="form-control">
+<option value="">-- Select --</option>
+<option>SSLC</option>
+<option>Plus Two</option>
+<option>Diploma</option>
+<option>Graduate</option>
+<option>Post Graduate</option>
+<option>Professional</option>
+<option>Other</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label>Address</label>
+<textarea name="address" rows="3" class="form-control"></textarea>
+</div>
+
+<div class="mb-3">
+<label>City</label>
+<input type="text" name="city" class="form-control">
+</div>
+
+<div class="mb-3">
+<label>District</label>
+<input type="text" name="district" class="form-control">
+</div>
+
+<button class="btn btn-success w-100">Add Agent</button>
+</form>
+
+<!-- FOOTER (UNCHANGED) -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Insurances</h5>
+                <a href="#">General Insurance</a>
+                <a href="#">Life Insurance</a>
+                <a href="#">Term Insurance</a>
+                <a href="#">Investment</a>
+                <a href="#">Health Insurance</a>
+                <a href="#">Other Insurance</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Calculators</h5>
+                <a href="#">Income Tax Calculator</a>
+                <a href="#">Term Insurance Calculator</a>
+                <a href="#">LIC Calculator</a>
+                <a href="#">Life Insurance Calculator</a>
+                <a href="#">Health Insurance Calculator</a>
+                <a href="#">Travel Insurance Calculator</a>
+                <a href="#">Car Insurance Calculator</a>
+                <a href="#">Bike Insurance Calculator</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Resources</h5>
+                <a href="#">Articles</a>
+                <a href="#">Customer Reviews</a>
+                <a href="#">Insurance Companies</a>
+                <a href="#">Newsroom</a>
+                <a href="#">Awards</a>
+                <a href="#">PB Life</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Company</h5>
+                <a href="#">About us</a>
+                <a href="#">Sitemap</a>
+                <a href="#">Career</a>
+                <a href="#">Legal & Admin policies</a>
+                <a href="#">INSP</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Verify your Advisor</a>
+                <a href="#">Investors Relation</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Media</h5>
+                <a href="#">Press Releases</a>
+                <a href="#">Photo Gallery</a>
+                <a href="#">Event Highlights</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>References</h5>
+                <a href="#">Public Notice</a>
+                <a href="#">Important Links</a>
+                <a href="#">Retirees Lounge</a>
+                <a href="#">Familiarization Program</a>
+                <a href="#">Financial Inclusion</a>
+                <a href="#">Holiday Calendar</a>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="payment-card">
+            <h5>Payment Methods</h5>
+            <div class="payment-logo">
+                <img src="{% static 'images/p1.jpg' %}">
+                <img src="{% static 'images/p2.png' %}">
+                <img src="{% static 'images/p3.webp' %}">
+                <img src="{% static 'images/p4.webp' %}">
+                <img src="{% static 'images/p5.webp' %}">
+                <img src="{% static 'images/p6.png' %}">
+            </div>
+        </div>
+
+        <p class="text-center fw-bold mt-3 mb-0">
+            &copy; Copyright 2008–2026 insurance.com All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("agentForm");
+
+    /* ---------- COMMON ERROR / SUCCESS ---------- */
+    function showError(input, message) {
+        const small = input.parentElement.querySelector("small");
+        if (small) small.innerText = message;
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        input.dataset.valid = "false";
+    }
+
+    function showSuccess(input) {
+        const small = input.parentElement.querySelector("small");
+        if (small) small.innerText = "";
+        input.classList.remove("is-invalid");
+        input.classList.add("is-valid");
+        input.dataset.valid = "true";
+    }
+
+    /* ---------- BASIC VALIDATORS ---------- */
+    function checkRequired(input) {
+        if (input.value.trim() === "") {
+            showError(input, "This field is required");
+            return false;
+        }
+        return true;
+    }
+
+    function checkLength(input, min) {
+        if (input.value.trim().length < min) {
+            showError(input, `Minimum ${min} characters required`);
+            return false;
+        }
+        showSuccess(input);
+        return true;
+    }
+
+    function checkEmail(input) {
+        const value = input.value.trim();
+        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+        if (value === "") {
+            showError(input, "Email is required");
+            return false;
+        }
+
+        if (!gmailRegex.test(value)) {
+            showError(input, "Only @gmail.com email is allowed");
+            return false;
+        }
+        return true;
+    }
+
+    function checkPhone(input) {
+        const regex = /^[6-9][0-9]{9}$/;
+
+        if (input.value.trim() === "") {
+            showError(input, "Phone number is required");
+            return false;
+        }
+
+        if (!regex.test(input.value.trim())) {
+            showError(input, "Enter valid 10 digit phone number");
+            return false;
+        }
+        return true;
+    }
+
+    function checkAge(input) {
+        const value = input.value.trim();
+
+        if (value === "") {
+            showError(input, "Age is required");
+            return false;
+        }
+
+        if (isNaN(value) || Number(value) < 18) {
+            showError(input, "Age must be 18 or above");
+            return false;
+        }
+
+        showSuccess(input);
+        return true;
+    }
+
+    /* ---------- AJAX EXISTING CHECK ---------- */
+    function checkExists(input, field) {
+        const value = input.value.trim();
+        if (value === "") return;
+
+        fetch(`/check-agent-exists/?field=${field}&value=${value}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.exists) {
+                    showError(input, `${field} already exists`);
+                } else {
+                    showSuccess(input);
+                }
+            });
+    }
+
+    /* ---------- INPUT REFERENCES ---------- */
+    const firstName = document.getElementById("first_name");
+    const lastName  = document.getElementById("last_name");
+    const username  = document.getElementById("username");
+    const email     = document.getElementById("email");
+    const phone     = document.getElementById("phone");
+    const age       = document.getElementById("age");
+
+    /* ---------- LIVE VALIDATION ---------- */
+    firstName.addEventListener("input", () => {
+        checkRequired(firstName) && checkLength(firstName, 3);
+    });
+
+    lastName.addEventListener("input", () => {
+        checkRequired(lastName) && checkLength(lastName, 3);
+    });
+
+    username.addEventListener("input", () => {
+        if (checkRequired(username) && checkLength(username, 4)) {
+            checkExists(username, "username");
+        }
+    });
+
+    email.addEventListener("input", () => {
+        if (checkEmail(email)) {
+            checkExists(email, "email");
+        }
+    });
+
+    phone.addEventListener("input", () => {
+        if (checkPhone(phone)) {
+            checkExists(phone, "phone");
+        }
+    });
+
+    age.addEventListener("input", () => {
+        checkAge(age);
+    });
+
+    /* ---------- SUBMIT VALIDATION ---------- */
+    form.addEventListener("submit", function (e) {
+
+        const isValid =
+            checkRequired(firstName) && checkLength(firstName, 3) &&
+            checkRequired(lastName)  && checkLength(lastName, 3)  &&
+            checkRequired(username)  && checkLength(username, 4)  &&
+            checkEmail(email) &&
+            checkPhone(phone) &&
+            checkAge(age) &&
+            username.dataset.valid !== "false" &&
+            email.dataset.valid !== "false" &&
+            phone.dataset.valid !== "false";
+
+        if (!isValid) {
+            e.preventDefault();
+        }
+    });
+
+});
+</script>
+
+
+</body>
+</html>

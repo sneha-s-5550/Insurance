@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<style>
+    body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+        .card {
+    border-radius: 12px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.modal-header {
+    border-radius: 6px 6px 0 0;
+    background-color:lightskyblue;
+    color: black;
+    font-weight: 700;
+}
+
+.modal-body strong {
+    color: #333;
+}
+
+.modal-body h6 {
+    font-weight: 600;
+    color: black;
+}
+
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 10px;
+    }
+}
+
+
+    .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+
+
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg">
+<div class="container">
+<a class="navbar-brand fw-bold" href="#">
+<img src="{% static 'images/logos.png' %}" height="45" class="rounded">
+INSURANCE
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="{% url 'admindash' %}">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_agent' %}">Add Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_agent' %}">View Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_campaign' %}">Add Campaign</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_campaign' %}">View Campaigns</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'client_view' %}">View Client</a></li>
+<li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+</ul>
+</div>
+</div>
+</nav><br><br>
+
+     {% if messages %}
+        <div class="alert alert-info alert-dismissible" style="width: 100%; margin-bottom: 15px;">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <div class="container mt-4">
+    <h4 class="mb-4">Clients</h4>
+
+    <div class="row">
+        {% for client in clients %}
+        <div class="col-lg-4 col-md-6 col-12 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ client.name }}</h5>
+
+                    <p class="mb-1"><strong>Campaign:</strong>
+                        {{ client.campaign.name|default:"-" }}
+                    </p>
+
+                    <p class="mb-1"><strong>Phone:</strong> {{ client.phone }}</p>
+
+                    <p class="mb-2"><strong>Address:</strong>
+                        {{ client.address|truncatechars:40 }}
+                    </p>
+
+                    <div class="card-actions mt-2">
+
+                        <button type="button"
+                                class="btn btn-primary btn-sm"
+                                data-toggle="modal"
+                                data-target="#clientModal{{ client.id }}">
+                            View More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>No clients found</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ================= MODALS (OUTSIDE ROW) ================= -->
+{% for client in clients %}
+<div class="modal fade" id="clientModal{{ client.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">{{ client.name }} – Full Details</h5>
+                <button type="button" class="close text-dark" data-dismiss="modal">
+                    &times;
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-12">
+                        <h6 class="border-bottom pb-1">Basic Details</h6>
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Name:</strong> {{ client.name }}</div>
+                    <div class="col-md-6 mt-2"><strong>Phone:</strong> {{ client.phone }}</div>
+                    <div class="col-md-6 mt-2"><strong>Address:</strong> {{ client.address }}</div>
+                    <div class="col-md-6 mt-2"><strong>DOB:</strong> {{ client.dob }}</div>
+                    <div class="col-md-6 mt-2"><strong>Age:</strong> {{ client.age }}</div>
+
+                    <div class="col-md-6 mt-2"><strong>Qualification:</strong> {{ client.qualification }}</div>
+                    <div class="col-md-6 mt-2"><strong>Profession:</strong> {{ client.profession }}</div>
+
+       
+
+                    <div class="col-md-6 mt-2"><strong>Aadhaar Number:</strong> {{ client.aadhaar_number }}</div>
+                    <div class="col-md-6 mt-2"><strong>PAN Number:</strong> {{ client.pan_number }}</div>
+
+                    <!-- ADDITIONAL DETAILS -->
+                    <div class="col-12 mt-3">
+                        <h6 class="border-bottom pb-1">Additional Details</h6>
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Income Level:</strong> {{ client.income_level }}</div>
+                    <div class="col-md-6 mt-2"><strong>Marital Status:</strong> {{ client.marital_status }}</div>
+                    <div class="col-md-6 mt-2"><strong>Has Kids:</strong>
+                        {{ client.has_kids|yesno:"Yes,No" }}
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Referral Source:</strong> {{ client.referral_source }}</div>
+                    <div class="col-md-6 mt-2"><strong>Existing Policy:</strong>
+                        {{ client.existing_policy|yesno:"Yes,No" }}
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Service Satisfaction:</strong>
+                        {{ client.service_satisfaction|default:"-" }}
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <h6 class="border-bottom pb-1">Insurance Details</h6>
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Visited Policy:</strong> {{ client.visited_policy }}</div>
+                    <div class="col-md-6 mt-2"><strong>Willing to Purchase:</strong>
+                        {{ client.willing_to_purchase|yesno:"Yes,No" }}
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Willing to Switch:</strong>
+                        {{ client.willing_to_switch|yesno:"Yes,No" }}
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Share Previous Policy:</strong>
+                        {{ client.willing_to_share_previous|yesno:"Yes,No" }}
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Previous Policy Number:</strong>
+                        {{ client.previous_policy_number|default:"-" }}
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Previous Policy Name:</strong>
+                        {{ client.previous_policy_name|default:"-" }}
+                    </div>
+
+                    <div class="col-md-6 mt-2"><strong>Previous Claimed:</strong>
+                        {{ client.previous_claimed|yesno:"Yes,No" }}
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <h6 class="border-bottom pb-1">Summary</h6>
+                    </div>
+
+                    <div class="col-md-12 mt-2">
+                        <strong>Customer Preferences:</strong><br>
+                        {{ client.customer_preferences|default:"-" }}
+                    </div>
+
+                    <div class="col-md-12 mt-3">
+                        <strong>Agent Note:</strong><br>
+                        {{ client.agent_note|default:"-" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endfor %}
+
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 col-sm-6">
+                    <h5>Insurances</h5>
+                    <a href="">General Insurance</a>
+                    <a href="">Life Insurance</a>
+                    <a href="">Term Insurance</a>
+                    <a href="">Investment</a>
+                    <a href="">Health Insurance</a>
+                    <a href="">Other Insurance</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Calculators</h5>
+                    <a href="">Income Tax Calculator</a>
+                    <a href="">Term Insurance Calculator</a>
+                    <a href="">LIC Calculator</a>
+                    <a href="">Life Insurance Calculator</a>
+                    <a href="">Health Insurance Calculator</a>
+                    <a href="">Travel Insurance Calculator</a>
+                    <a href="">Car Insurance Calculator</a>
+                    <a href="">Bike Insurance Calculator</a>
+                </div>
+
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Resources</h5>
+                    <a href="">Articles</a>
+                    <a href="">Customer Reviews</a>
+                    <a href="">Insurance Companies</a>
+                    <a href="">Newsroom</a>
+                    <a href="">Awards</a>
+                    <a href="">PB Life</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Company</h5>
+                    <a href="">About us</a>
+                    <a href="">Sitemap</a>
+                    <a href="">Career</a>
+                    <a href="">Legal & Admin policies</a>
+                    <a href="">INSP</a>
+                    <a href="">Contact Us</a>
+                    <a href="">Verify your Advisor</a>
+                    <a href="">Investors Relation</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Media</h5>
+                    <a href="">Press Releases</a>
+                    <a href="">Photo Gallery</a>
+                    <a href="">Event Highlights</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>References</h5>
+                    <a href="">Public Notice</a>
+                    <a href="">Important Links</a>
+                    <a href="">Retirees Lounge</a>
+                    <a href="">Familiarization Program</a>
+                    <a href="">Financial Inclusion</a>
+                    <a href="">Holiday Calendar</a>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="payment-card">
+                    <h3>Payment Methods</h3>
+                    <div class="payment-logo">
+                        <img src="{% static 'images/p1.jpg' %}" alt="">
+                        <img src="{% static 'images/p2.png' %}" alt="">
+                        <img src="{% static 'images/p3.webp' %}" alt="">
+                        <img src="{% static 'images/p4.webp' %}" alt="">
+                        <img src="{% static 'images/p5.webp' %}" alt="">
+                        <img src="{% static 'images/p6.png' %}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <p style="text-align: center; margin: 0; color:black;font-weight: bold;">&copy; Copyright 2008-2026 insurance.com All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

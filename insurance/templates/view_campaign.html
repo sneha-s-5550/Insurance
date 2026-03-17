@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<style>
+    body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+    /* Form container */
+form {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Labels */
+form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+
+/* Inputs & Select */
+form .form-control {
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focus effect */
+form .form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.25);
+}
+
+/* Map iframe */
+#mapFrame {
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+}
+
+/* Button */
+form button.btn-success {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Button hover */
+form button.btn-success:hover {
+    background-color: #157347;
+    transform: translateY(-1px);
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+    form {
+        padding: 20px;
+    }
+
+    #mapFrame {
+        height: 220px;
+    }
+}
+
+    .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg">
+<div class="container">
+<a class="navbar-brand fw-bold" href="#">
+<img src="{% static 'images/logos.png' %}" height="45" class="rounded">
+INSURANCE
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="{% url 'admindash' %}">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_agent' %}">Add Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_agent' %}">View Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_campaign' %}">Add Campaign</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_campaign' %}">View Campaigns</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'client_view' %}">View Client</a></li>
+<li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+</ul>
+</div>
+</div>
+</nav><br><br>
+
+    
+    <div class="container mt-5">
+
+    <h3 class="mb-4 text-center">Campaign List</h3>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Campaign Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>#</th>
+                    <th>Campaign Name</th>
+                    <th>Agent</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for campaign in campaigns %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td>{{ campaign.name }}</td>
+                    <td>
+                        {{ campaign.agent.first_name }} {{ campaign.agent.last_name }}
+                    </td>
+                    <td class="text-center">{{ campaign.start_date }}</td>
+                    <td class="text-center">{{ campaign.end_date }}</td>
+                    <td>{{ campaign.location }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'edit_campaign' campaign.id %}"
+                           class="btn btn-sm btn-primary">
+                            Edit
+                        </a>
+
+                        <a href="{% url 'delete_campaign' campaign.id %}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Are you sure you want to delete this campaign?');">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">
+                        No campaigns available
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Campaign Button -->
+    <div class="text-end mt-3">
+        <a href="{% url 'add_campaign' %}" class="btn btn-success">
+            + Add New Campaign
+        </a>
+    </div>
+
+</div><br><br>
+
+
+    <footer class="footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Insurances</h5>
+                <a href="#">General Insurance</a>
+                <a href="#">Life Insurance</a>
+                <a href="#">Term Insurance</a>
+                <a href="#">Investment</a>
+                <a href="#">Health Insurance</a>
+                <a href="#">Other Insurance</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Calculators</h5>
+                <a href="#">Income Tax Calculator</a>
+                <a href="#">Term Insurance Calculator</a>
+                <a href="#">LIC Calculator</a>
+                <a href="#">Life Insurance Calculator</a>
+                <a href="#">Health Insurance Calculator</a>
+                <a href="#">Travel Insurance Calculator</a>
+                <a href="#">Car Insurance Calculator</a>
+                <a href="#">Bike Insurance Calculator</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Resources</h5>
+                <a href="#">Articles</a>
+                <a href="#">Customer Reviews</a>
+                <a href="#">Insurance Companies</a>
+                <a href="#">Newsroom</a>
+                <a href="#">Awards</a>
+                <a href="#">PB Life</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Company</h5>
+                <a href="#">About us</a>
+                <a href="#">Sitemap</a>
+                <a href="#">Career</a>
+                <a href="#">Legal & Admin policies</a>
+                <a href="#">INSP</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Verify your Advisor</a>
+                <a href="#">Investors Relation</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Media</h5>
+                <a href="#">Press Releases</a>
+                <a href="#">Photo Gallery</a>
+                <a href="#">Event Highlights</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>References</h5>
+                <a href="#">Public Notice</a>
+                <a href="#">Important Links</a>
+                <a href="#">Retirees Lounge</a>
+                <a href="#">Familiarization Program</a>
+                <a href="#">Financial Inclusion</a>
+                <a href="#">Holiday Calendar</a>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="payment-card">
+            <h5>Payment Methods</h5>
+            <div class="payment-logo">
+                <img src="{% static 'images/p1.jpg' %}">
+                <img src="{% static 'images/p2.png' %}">
+                <img src="{% static 'images/p3.webp' %}">
+                <img src="{% static 'images/p4.webp' %}">
+                <img src="{% static 'images/p5.webp' %}">
+                <img src="{% static 'images/p6.png' %}">
+            </div>
+        </div>
+
+        <p class="text-center fw-bold mt-3 mb-0">
+            &copy; Copyright 2008–2026 insurance.com All rights reserved.
+        </p>
+    </div>
+</footer>
+</body>
+</html>

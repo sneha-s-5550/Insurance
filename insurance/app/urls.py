@@ -1,0 +1,32 @@
+from django.urls import path
+from .import views
+
+urlpatterns = [
+    path('',views.home,name='home'),
+    path('loginpage/',views.loginpage,name='loginpage'),
+    path('logout/', views.logout, name='logout'),
+    path('log/', views.log, name='log'),
+    path('admindash/',views.admindash,name='admindash'),
+    path('agent_dash/',views.agent_dash,name='agent_dash'),
+    path('add_agent/',views.add_agent,name='add_agent'),
+    path("check-agent-exists/", views.check_agent_exists, name="check_agent_exists"),
+    path('view_agent/',views.agent_list,name='view_agent'),
+    path('agent/edit/<int:id>/', views.edit_agent, name='edit_agent'),
+    path('agent/delete/<int:id>/', views.delete_agent, name='delete_agent'),
+    path('add_campaign/',views.add_campaign,name='add_campaign'),
+    path('view-campaign/', views.view_campaign, name='view_campaign'),
+    path('edit_campaign/<int:id>/', views.edit_campaign, name='edit_campaign'),
+    path('delete-campaign/<int:id>/', views.delete_campaign, name='delete_campaign'),
+    path("clients_view/", views.client_view, name="client_view"),
+    path('client/add/', views.add_client, name='add_client'),
+    path("check-client-exists/", views.check_client_exists, name="check_client_exists"),
+    path("clients/cards/", views.client_card_view, name="client_card_view"),
+    path("client/edit/<int:id>/", views.edit_client, name="edit_client"),
+    path('client/delete/<int:client_id>/', views.delete_client, name='delete_client'),
+    path('view-campaignlist/', views.view_campaignlist, name='view_campaignlist'),
+    path("profile/", views.agent_profile_view, name="agent_profile_view"),
+    path("profile/edit/", views.agent_profile_edit, name="agent_profile_edit"),
+    path("agent/validate-unique/",views.validate_agent_unique_field,name="validate_agent_unique_field"),
+    path('resetpage/', views.resetpage, name='resetpage'),
+    path('reset_password_fun/', views.reset_password_fun, name='reset_password_fun'),
+]

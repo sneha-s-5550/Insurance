@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Insurance</title>
+
+    {% load static %}
+
+    <!-- Bootstrap 5 ONLY -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+        .card-container{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .card-box{
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .card-box img{
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .card-box:hover{
+            transform: scale(1.05);
+        }
+        .card-caption{
+            margin-top: 8px;
+            font-weight: 600;
+        }
+        .about-section {
+  background: #fff;
+}
+
+.img-main {
+  width: 100%;
+  height: 500px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+    .career-section {
+  min-height: 100vh;
+  padding: 80px 0;
+  background: linear-gradient(180deg, #002060, #00143d);
+  display: flex;
+  align-items: center;
+}
+
+/* Card */
+.career-card {
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transition: transform 0.3s ease;
+}
+
+.career-card:hover {
+  transform: translateY(-6px);
+}
+
+.career-card img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+/* Card body */
+.card-body {
+  padding: 18px;
+}
+
+.card-body h6 {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.card-body p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.card-body a {
+  font-size: 13px;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Mobile spacing */
+@media (max-width: 576px) {
+  .career-section {
+    padding: 40px 15px;
+  }
+}
+
+        /* Footer */
+        .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-dark" href="#">
+            <img src="{% static 'images/logos.png' %}" height="45" width="45" class="rounded">
+            INSURANCE
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a href="{% url 'admindash' %}" class="nav-link">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'add_agent' %}" class="nav-link">Add Agent</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'view_agent' %}" class="nav-link">View Agent</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'add_campaign' %}" class="nav-link">Add Campaign</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'view_campaign' %}" class="nav-link">View Campaigns</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'client_view' %}" class="nav-link">View Client</a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav><br><br>
+
+<!-- Dashboard Content -->
+<div class="container">
+    <h3 style="text-align: center;text-decoration: underline;">AWARD & RECONGNITIONS</h3><br>
+    <p style="text-align: center;font-style: italic;">Liberty General Insurance since its launch in India has been instrumental at achieving 
+        highest standards of customer service, technology implementation and industry contribution.
+         The awards and felicitations received by the organisation bears testimony of the above.
+          Liberty General Insurance has always kept customers at forefront of its focus.
+           Its employees take immense pride in contributing to the success of the company and 
+           their individual contributions create the desired differentiation for the brand.
+           Liberty General Insurance has been dedicated towards improving the lives of individuals
+            and entities with its uniquely designed insurance solutions and hence attempts to 
+            create safer and secure environment for all. These effort paves way for many 
+            successful innovations and targets efficiency in all possible means.
+             We are here to create a responsible and secure environment and hence also are 
+             dedicated to become India’s most admired general insurance company through our 
+             achievements.</p>
+</div><br>
+
+<div class="container">
+    <div class="card-container">
+        <div class="card-box">
+            <img src="{% static 'images/a1.jpg' %}">
+        </div>
+        <div class="card-box">
+            <img src="{% static 'images/a2.webp' %}">
+        </div>
+        <div class="card-box">
+            <img src="{% static 'images/a3.jpg' %}">
+        </div>
+        <div class="card-box">
+            <img src="{% static 'images/a4.jpg' %}">
+        </div>
+    </div>
+</div><br>
+<section class="about-section py-5">
+    <h3 style="text-align: center;font-weight: bold;color: darkblue;font-family: cursive;"> WE'RE PASSINATE.WE'RE BOLD</h3><br>
+  <div class="container">
+
+    <!-- ROW 1 -->
+    <div class="row align-items-center mb-5">
+      <div class="col-md-6">
+        <p>
+          A joint venture between Liberty Citystate holdings PTE Ltd, 
+          a group company of US Headquartered Liberty Mutual Insurance Group,
+           a leading multinational property and casualty group, and Liberty Industries Limited,
+            Liberty General Insurance commenced operations in 2013 with the aim of providing 
+            comprehensive retail, commercial and industrial insurance solutions.
+        </p>
+      </div>
+
+      <div class="col-md-6 position-relative">
+        <img src="https://www.cpt.dk/media/1766/shutterstock_57571180-new-york-cityscape-tourism-concept-photograph-state-of-liberty.jpg    " class="img-main">
+      </div>
+    </div>
+  </div>
+</section><br>
+<section class="career-section">
+  <div class="container">
+    <div class="row justify-content-center g-4">
+
+      <!-- Card 1 -->
+      <div class="col-12 col-md-6">
+        <div class="career-card">
+          <img src="https://png.pngtree.com/png-clipart/20230805/original/pngtree-community-care-logo-logo-culture-team-vector-picture-image_9798543.png" alt="">
+          <div class="card-body">
+            <h6>Culture of Care</h6>
+            <p>
+              We’re committed to a purpose of caring for others,
+              and that purpose starts with caring for each other.
+            </p>
+            <a href="#">Learn More →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-12 col-md-6">
+        <div class="career-card">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQF4X5sX0DTo0zWa5hMgpJSdLmGWziwg6_yrQ&s" alt="">
+          <div class="card-body">
+            <h6>Great Place To Work®</h6>
+            <p>
+              Our work environment is recognized for promoting
+              a respectful, inclusive and collaborative culture.
+            </p>
+            <a href="#">Learn More →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-12 col-md-6">
+        <div class="career-card">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQs2jxEsEtNPgpizO42d1lpnkyDXM5VKEdPnw&s" alt="">
+          <div class="card-body">
+            <h6>Find Your Fit</h6>
+            <p>
+              Discover roles where your skills, passions and
+              aspirations can thrive and grow.
+            </p>
+            <a href="#">Career Areas →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="col-12 col-md-6">
+        <div class="career-card">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0cMfDT325wydw7v5mtLTm5rsvtXTgQegCFw&s" alt="">
+          <div class="card-body">
+            <h6>Around the World</h6>
+            <p>
+              Join MetLife teams working with purpose-driven
+              individuals across the globe.
+            </p>
+            <a href="#">Locations →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section><br>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Insurances</h5>
+                <a href="#">General Insurance</a>
+                <a href="#">Life Insurance</a>
+                <a href="#">Term Insurance</a>
+                <a href="#">Investment</a>
+                <a href="#">Health Insurance</a>
+                <a href="#">Other Insurance</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Calculators</h5>
+                <a href="#">Income Tax Calculator</a>
+                <a href="#">Term Insurance Calculator</a>
+                <a href="#">LIC Calculator</a>
+                <a href="#">Life Insurance Calculator</a>
+                <a href="#">Health Insurance Calculator</a>
+                <a href="#">Travel Insurance Calculator</a>
+                <a href="#">Car Insurance Calculator</a>
+                <a href="#">Bike Insurance Calculator</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Resources</h5>
+                <a href="#">Articles</a>
+                <a href="#">Customer Reviews</a>
+                <a href="#">Insurance Companies</a>
+                <a href="#">Newsroom</a>
+                <a href="#">Awards</a>
+                <a href="#">PB Life</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Company</h5>
+                <a href="#">About us</a>
+                <a href="#">Sitemap</a>
+                <a href="#">Career</a>
+                <a href="#">Legal & Admin policies</a>
+                <a href="#">INSP</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Verify your Advisor</a>
+                <a href="#">Investors Relation</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Media</h5>
+                <a href="#">Press Releases</a>
+                <a href="#">Photo Gallery</a>
+                <a href="#">Event Highlights</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>References</h5>
+                <a href="#">Public Notice</a>
+                <a href="#">Important Links</a>
+                <a href="#">Retirees Lounge</a>
+                <a href="#">Familiarization Program</a>
+                <a href="#">Financial Inclusion</a>
+                <a href="#">Holiday Calendar</a>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="payment-card">
+            <h5>Payment Methods</h5>
+            <div class="payment-logo">
+                <img src="{% static 'images/p1.jpg' %}">
+                <img src="{% static 'images/p2.png' %}">
+                <img src="{% static 'images/p3.webp' %}">
+                <img src="{% static 'images/p4.webp' %}">
+                <img src="{% static 'images/p5.webp' %}">
+                <img src="{% static 'images/p6.png' %}">
+            </div>
+        </div>
+
+        <p class="text-center fw-bold mt-3 mb-0">
+            &copy; Copyright 2008–2026 insurance.com All rights reserved.
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>

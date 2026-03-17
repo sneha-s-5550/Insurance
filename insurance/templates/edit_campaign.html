@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<style>
+    body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+    /* Form container */
+form {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Labels */
+form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+
+/* Inputs & Select */
+form .form-control {
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 15px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focus effect */
+form .form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.25);
+}
+
+/* Map iframe */
+#mapFrame {
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+}
+
+/* Button */
+form button.btn-success {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Button hover */
+form button.btn-success:hover {
+    background-color: #157347;
+    transform: translateY(-1px);
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+    form {
+        padding: 20px;
+    }
+
+    #mapFrame {
+        height: 220px;
+    }
+}
+
+    .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+
+
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg">
+<div class="container">
+<a class="navbar-brand fw-bold" href="#">
+<img src="{% static 'images/logos.png' %}" height="45" class="rounded">
+INSURANCE
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="{% url 'admindash' %}">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_agent' %}">Add Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_agent' %}">View Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_campaign' %}">Add Campaign</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_campaign' %}">View Campaigns</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'client_view' %}">View Client</a></li>
+<li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+</ul>
+</div>
+</div>
+</nav><br><br>
+
+    
+    <div class="container mt-5">
+
+    <h3 class="mb-4 text-center">Edit Campaign</h3>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} text-center">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <!-- Campaign Name -->
+        <div class="mb-3">
+            <label class="form-label">Campaign Name</label>
+            <input type="text"
+                   name="name"
+                   class="form-control"
+                   value="{{ campaign.name }}"
+                   required>
+             <small class="text-danger"></small>
+        </div>
+
+        <!-- Assign Agent -->
+        <div class="mb-3">
+            <label class="form-label ">Assign Agent</label>
+            <select name="agent" class="form-control " required>
+                <option value="">-- Select Agent --</option>
+                {% for agent in agents %}
+                    <option value="{{ agent.id }}"
+                        {% if agent.id == campaign.agent.id %}selected{% endif %}>
+                        {{ agent.first_name }} {{ agent.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+             <small class="text-danger"></small>
+        </div>
+
+        <!-- Start Date -->
+        <div class="mb-3">
+            <label class="form-label">Start Date</label>
+            <input type="date"
+                   name="start_date"
+                   class="form-control"
+                   value="{{ campaign.start_date|date:'Y-m-d' }}"
+                   required>
+             <small class="text-danger"></small>
+        </div>
+
+        <!-- End Date -->
+        <div class="mb-3">
+            <label class="form-label">End Date</label>
+            <input type="date"
+                   name="end_date"
+                   class="form-control"
+                   value="{{ campaign.end_date|date:'Y-m-d' }}"
+                   required>
+             <small class="text-danger"></small>
+        </div>
+
+        <!-- Location -->
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input type="text"
+                   name="location"
+                   id="locationInput"
+                   class="form-control"
+                   value="{{ campaign.location }}"
+                   onkeyup="loadMap()"
+                   required>
+             <small class="text-danger"></small>
+        </div>
+
+        <!-- Map Preview -->
+        <div class="mb-3">
+            <iframe
+                id="mapFrame"
+                width="100%"
+                height="300"
+                style="border:0;"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps?q={{ campaign.location|urlencode }}&output=embed">
+            </iframe>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-50">
+                Update Campaign
+            </button>
+            <a href="{% url 'view_campaign' %}" class="btn btn-secondary w-50">
+                Cancel
+            </a>
+        </div>
+
+    </form>
+</div>
+
+<script>
+function loadMap() {
+    const location = document.getElementById("locationInput").value;
+    const mapFrame = document.getElementById("mapFrame");
+
+    if (location.length > 2) {
+        mapFrame.src = "https://www.google.com/maps?q=" + encodeURIComponent(location) + "&output=embed";
+        mapFrame.style.display = "block";
+    }
+}
+</script><br><br>
+
+    <footer class="footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Insurances</h5>
+                <a href="#">General Insurance</a>
+                <a href="#">Life Insurance</a>
+                <a href="#">Term Insurance</a>
+                <a href="#">Investment</a>
+                <a href="#">Health Insurance</a>
+                <a href="#">Other Insurance</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Calculators</h5>
+                <a href="#">Income Tax Calculator</a>
+                <a href="#">Term Insurance Calculator</a>
+                <a href="#">LIC Calculator</a>
+                <a href="#">Life Insurance Calculator</a>
+                <a href="#">Health Insurance Calculator</a>
+                <a href="#">Travel Insurance Calculator</a>
+                <a href="#">Car Insurance Calculator</a>
+                <a href="#">Bike Insurance Calculator</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Resources</h5>
+                <a href="#">Articles</a>
+                <a href="#">Customer Reviews</a>
+                <a href="#">Insurance Companies</a>
+                <a href="#">Newsroom</a>
+                <a href="#">Awards</a>
+                <a href="#">PB Life</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Company</h5>
+                <a href="#">About us</a>
+                <a href="#">Sitemap</a>
+                <a href="#">Career</a>
+                <a href="#">Legal & Admin policies</a>
+                <a href="#">INSP</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Verify your Advisor</a>
+                <a href="#">Investors Relation</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Media</h5>
+                <a href="#">Press Releases</a>
+                <a href="#">Photo Gallery</a>
+                <a href="#">Event Highlights</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>References</h5>
+                <a href="#">Public Notice</a>
+                <a href="#">Important Links</a>
+                <a href="#">Retirees Lounge</a>
+                <a href="#">Familiarization Program</a>
+                <a href="#">Financial Inclusion</a>
+                <a href="#">Holiday Calendar</a>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="payment-card">
+            <h5>Payment Methods</h5>
+            <div class="payment-logo">
+                <img src="{% static 'images/p1.jpg' %}">
+                <img src="{% static 'images/p2.png' %}">
+                <img src="{% static 'images/p3.webp' %}">
+                <img src="{% static 'images/p4.webp' %}">
+                <img src="{% static 'images/p5.webp' %}">
+                <img src="{% static 'images/p6.png' %}">
+            </div>
+        </div>
+
+        <p class="text-center fw-bold mt-3 mb-0">
+            &copy; Copyright 2008–2026 insurance.com All rights reserved.
+        </p>
+    </div>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+    const startDate = form.querySelector("[name='start_date']");
+    const endDate = form.querySelector("[name='end_date']");
+
+    const validators = {
+        name: value => value.trim() !== "",
+        agent: value => value !== "",
+        start_date: value => value !== "",
+        end_date: value => value !== "" && value >= startDate.value,
+        location: value => value.trim() !== ""
+    };
+
+    form.querySelectorAll("input, select").forEach(field => {
+        field.addEventListener("input", () => validateField(field));
+        field.addEventListener("change", () => validateField(field));
+    });
+
+    function validateField(field) {
+        const name = field.name;
+        const value = field.value;
+        const error = field.nextElementSibling;
+
+        if (!validators[name]) return true;
+
+        if (!validators[name](value)) {
+            field.classList.add("is-invalid");
+            field.classList.remove("is-valid");
+
+            if (name === "end_date") {
+                error.innerText = "End date must be after start date";
+            } else {
+                error.innerText = "This field is required";
+            }
+            return false;
+        } 
+        else {
+            field.classList.remove("is-invalid");
+            field.classList.add("is-valid");
+            error.innerText = "";
+            return true;
+        }
+    }
+
+    form.addEventListener("submit", function (e) {
+        let valid = true;
+
+        form.querySelectorAll("input, select").forEach(field => {
+            if (!validateField(field)) valid = false;
+        });
+
+        if (!valid) e.preventDefault();
+    });
+
+});
+</script>
+
+</body>
+</html>

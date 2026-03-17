@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard | Insurance</title>
+
+    {% load static %}
+
+    <!-- Bootstrap 5 ONLY -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+
+        /* Dashboard Heading */
+        .dashboard-title{
+            text-align: center;
+            margin: 40px 0;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-dark" href="#">
+            <img src="{% static 'images/logos.png' %}" height="45" width="45" class="rounded">
+            INSURANCE
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a href="{% url 'agent_dash' %}" class="nav-link">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'add_client' %}" class="nav-link">Add Client</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'client_card_view' %}" class="nav-link">View Client</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'view_campaignlist' %}" class="nav-link">View Campaigns</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'agent_profile_view' %}" class="nav-link">Profile</a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'resetpage' %}" class="btn btn-warning">
+                        <i class="fa-solid fa-user"></i> RESET
+                    </a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav><br>
+</nav><br><br>
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+    <div class="card p-4 shadow-sm" style="max-width: 500px; margin: auto;">
+  <h2 class="mb-4">Update Password</h2>
+    <form action="{% url 'reset_password_fun' %}" method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="c1">Current Password</label>
+            <input type="password" class="form-control" placeholder="Enter current password" name="currentpass" required id="c1">
+            <small class="text-danger"></small>
+        </div>
+        
+        <div class="form-group mt-3">
+            <label for="c2">New Password</label>
+            <input type="password" class="form-control" placeholder="Enter new password" name="newpass" required id="c2">
+            <small class="text-danger"></small>
+        </div>
+        
+        <div class="form-group mt-3">
+            <label for="c3">Confirm Password</label>
+            <input type="password" class="form-control" placeholder="Confirm new password" name="confirmpass" required id="c3">
+            <small class="text-danger"></small>
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-4 w-100">Reset Password</button>
+    </form>
+</div> <br>
+
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Insurances</h5>
+                <a href="#">General Insurance</a>
+                <a href="#">Life Insurance</a>
+                <a href="#">Term Insurance</a>
+                <a href="#">Investment</a>
+                <a href="#">Health Insurance</a>
+                <a href="#">Other Insurance</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Calculators</h5>
+                <a href="#">Income Tax Calculator</a>
+                <a href="#">Term Insurance Calculator</a>
+                <a href="#">LIC Calculator</a>
+                <a href="#">Life Insurance Calculator</a>
+                <a href="#">Health Insurance Calculator</a>
+                <a href="#">Travel Insurance Calculator</a>
+                <a href="#">Car Insurance Calculator</a>
+                <a href="#">Bike Insurance Calculator</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Resources</h5>
+                <a href="#">Articles</a>
+                <a href="#">Customer Reviews</a>
+                <a href="#">Insurance Companies</a>
+                <a href="#">Newsroom</a>
+                <a href="#">Awards</a>
+                <a href="#">PB Life</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Company</h5>
+                <a href="#">About us</a>
+                <a href="#">Sitemap</a>
+                <a href="#">Career</a>
+                <a href="#">Legal & Admin policies</a>
+                <a href="#">INSP</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Verify your Advisor</a>
+                <a href="#">Investors Relation</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Media</h5>
+                <a href="#">Press Releases</a>
+                <a href="#">Photo Gallery</a>
+                <a href="#">Event Highlights</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>References</h5>
+                <a href="#">Public Notice</a>
+                <a href="#">Important Links</a>
+                <a href="#">Retirees Lounge</a>
+                <a href="#">Familiarization Program</a>
+                <a href="#">Financial Inclusion</a>
+                <a href="#">Holiday Calendar</a>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="payment-card">
+            <h5>Payment Methods</h5>
+            <div class="payment-logo">
+                <img src="{% static 'images/p1.jpg' %}">
+                <img src="{% static 'images/p2.png' %}">
+                <img src="{% static 'images/p3.webp' %}">
+                <img src="{% static 'images/p4.webp' %}">
+                <img src="{% static 'images/p5.webp' %}">
+                <img src="{% static 'images/p6.png' %}">
+            </div>
+        </div>
+
+        <p class="text-center fw-bold mt-3 mb-0">
+            &copy; Copyright 2008–2026 insurance.com All rights reserved.
+        </p>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+    const currentPass = document.getElementById("c1");
+    const newPass = document.getElementById("c2");
+    const confirmPass = document.getElementById("c3");
+
+    const strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+    function showError(input, message) {
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        input.nextElementSibling.innerText = message;
+    }
+
+    function showSuccess(input) {
+        input.classList.remove("is-invalid");
+        input.classList.add("is-valid");
+        input.nextElementSibling.innerText = "";
+    }
+
+    currentPass.addEventListener("input", function () {
+        if (this.value.trim() === "") {
+            showError(this, "Current password is required");
+        } else {
+            showSuccess(this);
+        }
+    });
+
+    newPass.addEventListener("input", function () {
+        if (!strongPasswordRegex.test(this.value)) {
+            showError(
+                this,
+                "Min 8 chars, 1 uppercase, 1 number & 1 special character"
+            );
+        } else {
+            showSuccess(this);
+        }
+    });
+
+    confirmPass.addEventListener("input", function () {
+        if (this.value !== newPass.value || this.value === "") {
+            showError(this, "Passwords do not match");
+        } else {
+            showSuccess(this);
+        }
+    });
+
+    form.addEventListener("submit", function (e) {
+        let valid = true;
+
+        if (currentPass.value.trim() === "") {
+            showError(currentPass, "Current password is required");
+            valid = false;
+        }
+
+        if (!strongPasswordRegex.test(newPass.value)) {
+            showError(
+                newPass,
+                "Min 8 chars, 1 uppercase, 1 number & 1 special character"
+            );
+            valid = false;
+        }
+
+        if (confirmPass.value !== newPass.value) {
+            showError(confirmPass, "Passwords do not match");
+            valid = false;
+        }
+
+        if (!valid) {
+            e.preventDefault();
+        }
+    });
+
+});
+</script>
+
+
+</body>
+</html>

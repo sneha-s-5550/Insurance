@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+</head>
+
+<style>
+    body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+    /* Form container */
+form {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Labels */
+form label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #333;
+}
+
+/* Inputs & Select */
+form .form-control {
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 20px;
+    /* border: 1px solid #ced4da; */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Focus effect */
+form .form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, 0.25);
+}
+
+/* Map iframe */
+#mapFrame {
+    border-radius: 8px;
+    margin-top: 10px;
+    display: none;
+}
+
+/* Button */
+form button.btn-success {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+/* Button hover */
+form button.btn-success:hover {
+    background-color: #157347;
+    transform: translateY(-1px);
+}
+
+/* Mobile responsive */
+@media (max-width: 576px) {
+    form {
+        padding: 20px;
+    }
+
+    #mapFrame {
+        height: 220px;
+    }
+}
+
+    .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+
+
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg">
+<div class="container">
+<a class="navbar-brand fw-bold" href="#">
+<img src="{% static 'images/logos.png' %}" height="45" class="rounded">
+INSURANCE
+</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item"><a class="nav-link" href="{% url 'admindash' %}">Dashboard</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_agent' %}">Add Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_agent' %}">View Agent</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'add_campaign' %}">Add Campaign</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'view_campaign' %}">View Campaigns</a></li>
+<li class="nav-item"><a class="nav-link" href="{% url 'client_view' %}">View Client</a></li>
+<li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+</ul>
+</div>
+</div>
+</nav><br><br>
+
+     {% if messages %}
+        <div class="alert alert-info alert-dismissible" style="width: 100%; margin-bottom: 15px;">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="POST">
+    {% csrf_token %}
+
+    <h3 style="text-align: center;">Campaigns</h3>
+
+    <!-- Campaign Name -->
+    <div class="mb-3">
+        <label>Campaign Name</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+
+    <!-- Assign Agent -->
+    <div class="mb-3">
+        <label>Assign Agent</label>
+        <select name="agent" class="form-control" required>
+            <option value="">-- Select Agent --</option>
+            {% for agent in agents %}
+            <option value="{{ agent.id }}">
+                {{ agent.first_name }} {{ agent.last_name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Start Date -->
+    <div class="mb-3">
+        <label>Start Date</label>
+        <input type="date" name="start_date" class="form-control" required>
+    </div>
+
+    <!-- End Date -->
+    <div class="mb-3">
+        <label>End Date</label>
+        <input type="date" name="end_date" class="form-control" required>
+    </div>
+
+    <!-- Location -->
+    <div class="mb-3">
+        <label>Location</label>
+        <input type="text"
+               name="location"
+               id="locationInput"
+               class="form-control"
+               placeholder="Enter place name"
+               onkeyup="loadMap()"
+               required>
+    </div>
+
+    <!-- Map Preview -->
+    <div class="mb-3">
+        <iframe
+            id="mapFrame"
+            width="100%"
+            height="300"
+            style="border:0; display:none;"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-success w-100">
+        Add Campaign
+    </button>
+</form>
+
+
+    <script>
+function loadMap() {
+    const location = document.getElementById("locationInput").value;
+    const mapFrame = document.getElementById("mapFrame");
+
+    if (location.length > 2) {
+        mapFrame.src =
+            "https://www.google.com/maps?q=" +
+            encodeURIComponent(location) +
+            "&output=embed";
+        mapFrame.style.display = "block";
+    } else {
+        mapFrame.style.display = "none";
+    }
+}
+</script><br><br><br>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2 col-sm-6">
+                    <h5>Insurances</h5>
+                    <a href="">General Insurance</a>
+                    <a href="">Life Insurance</a>
+                    <a href="">Term Insurance</a>
+                    <a href="">Investment</a>
+                    <a href="">Health Insurance</a>
+                    <a href="">Other Insurance</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Calculators</h5>
+                    <a href="">Income Tax Calculator</a>
+                    <a href="">Term Insurance Calculator</a>
+                    <a href="">LIC Calculator</a>
+                    <a href="">Life Insurance Calculator</a>
+                    <a href="">Health Insurance Calculator</a>
+                    <a href="">Travel Insurance Calculator</a>
+                    <a href="">Car Insurance Calculator</a>
+                    <a href="">Bike Insurance Calculator</a>
+                </div>
+
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Resources</h5>
+                    <a href="">Articles</a>
+                    <a href="">Customer Reviews</a>
+                    <a href="">Insurance Companies</a>
+                    <a href="">Newsroom</a>
+                    <a href="">Awards</a>
+                    <a href="">PB Life</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Company</h5>
+                    <a href="">About us</a>
+                    <a href="">Sitemap</a>
+                    <a href="">Career</a>
+                    <a href="">Legal & Admin policies</a>
+                    <a href="">INSP</a>
+                    <a href="">Contact Us</a>
+                    <a href="">Verify your Advisor</a>
+                    <a href="">Investors Relation</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>Media</h5>
+                    <a href="">Press Releases</a>
+                    <a href="">Photo Gallery</a>
+                    <a href="">Event Highlights</a>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                    <h5>References</h5>
+                    <a href="">Public Notice</a>
+                    <a href="">Important Links</a>
+                    <a href="">Retirees Lounge</a>
+                    <a href="">Familiarization Program</a>
+                    <a href="">Financial Inclusion</a>
+                    <a href="">Holiday Calendar</a>
+                </div>
+            </div><br>
+            <div class="row">
+                <div class="payment-card">
+                    <h3>Payment Methods</h3>
+                    <div class="payment-logo">
+                        <img src="{% static 'images/p1.jpg' %}" alt="">
+                        <img src="{% static 'images/p2.png' %}" alt="">
+                        <img src="{% static 'images/p3.webp' %}" alt="">
+                        <img src="{% static 'images/p4.webp' %}" alt="">
+                        <img src="{% static 'images/p5.webp' %}" alt="">
+                        <img src="{% static 'images/p6.png' %}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <p style="text-align: center; margin: 0; color:black;font-weight: bold;">&copy; Copyright 2008-2026 insurance.com All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector("form");
+
+    const name = document.getElementById("name");
+    const agent = document.getElementById("agent");
+    const startDate = document.getElementById("start_date");
+    const endDate = document.getElementById("end_date");
+    const location = document.getElementById("locationInput");
+
+    function showError(input, message) {
+        const small = input.nextElementSibling;
+        small.innerText = message;
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+    }
+
+    function showSuccess(input) {
+        const small = input.nextElementSibling;
+        small.innerText = "";
+        input.classList.remove("is-invalid");
+        input.classList.add("is-valid");
+    }
+
+    function checkRequired(input) {
+        if (input.value.trim() === "") {
+            showError(input, "This field is required");
+            return false;
+        }
+        showSuccess(input);
+        return true;
+    }
+
+    function checkLength(input, min) {
+        if (input.value.trim().length < min) {
+            showError(input, `Minimum ${min} characters required`);
+            return false;
+        }
+        showSuccess(input);
+        return true;
+    }
+
+    function checkAgent(input) {
+        if (input.value === "") {
+            showError(input, "Please select an agent");
+            return false;
+        }
+        showSuccess(input);
+        return true;
+    }
+
+    function checkDates() {
+        if (startDate.value === "" || endDate.value === "") {
+            return false;
+        }
+        if (endDate.value < startDate.value) {
+            showError(endDate, "End date must be after start date");
+            return false;
+        }
+        showSuccess(endDate);
+        return true;
+    }
+
+    // LIVE EVENTS
+    name.addEventListener("input", () => {
+        checkRequired(name) && checkLength(name, 3);
+    });
+
+    agent.addEventListener("change", () => {
+        checkAgent(agent);
+    });
+
+    startDate.addEventListener("change", () => {
+        checkRequired(startDate);
+        checkDates();
+    });
+
+    endDate.addEventListener("change", () => {
+        checkRequired(endDate);
+        checkDates();
+    });
+
+    location.addEventListener("input", () => {
+        checkRequired(location) && checkLength(location, 3);
+    });
+
+    // SUBMIT CHECK
+    form.addEventListener("submit", function (e) {
+        if (
+            !checkRequired(name) ||
+            !checkLength(name, 3) ||
+            !checkAgent(agent) ||
+            !checkRequired(startDate) ||
+            !checkRequired(endDate) ||
+            !checkDates() ||
+            !checkRequired(location)
+        ) {
+            e.preventDefault();
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>

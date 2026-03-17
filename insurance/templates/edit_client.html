@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard | Insurance</title>
+
+    {% load static %}
+
+    <!-- Bootstrap 5 ONLY -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+
+        /* Dashboard Heading */
+        .dashboard-title{
+            text-align: center;
+            margin: 40px 0;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-dark" href="#">
+            <img src="{% static 'images/logos.png' %}" height="45" width="45" class="rounded">
+            INSURANCE
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a href="{% url 'agent_dash' %}" class="nav-link">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'add_client' %}" class="nav-link">Add Client</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'client_card_view' %}" class="nav-link">View Client</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'view_campaignlist' %}" class="nav-link">View Campaigns</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'agent_profile_view' %}" class="nav-link">Profile</a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'resetpage' %}" class="btn btn-warning">
+                        <i class="fa-solid fa-user"></i> RESET
+                    </a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav><br><br>
+
+<div class="container my-4">
+    <form method="POST" id="clientForm" novalidate>
+        {% csrf_token %}
+
+        <h3 class="text-center mb-4">Edit Client Details</h3>
+
+        <input type="hidden" id="client_id" value="{{ client.id }}">
+
+
+        <!-- ================= BASIC DETAILS ================= -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Basic Details</h5>
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name"
+                               value="{{ client.name }}" required>
+                        <small class="text-danger"></small>
+
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Phone</label>
+                        <input type="text" class="form-control" name="phone"
+                               value="{{ client.phone }}" pattern="[0-9]{10}" required>
+                        <small class="text-danger error"></small>
+
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea class="form-control" name="address" required>{{ client.address }}</textarea>
+                    <small class="text-danger"></small>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>DOB</label>
+                        <input type="date" class="form-control" name="dob"
+                               value="{{ client.dob|date:'Y-m-d' }}" required>
+                        <small class="text-danger"></small>
+
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Age</label>
+                        <input type="number" class="form-control" name="age"
+                               value="{{ client.age }}" min="18">
+                        <small class="text-danger"></small>
+
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Qualification</label>
+                        <select class="form-control" name="qualification">
+                            <option value="">-- Select Qualification --</option>
+                            <option value="SSLC" {% if client.qualification == "SSLC" %}selected{% endif %}>SSLC</option>
+                            <option value="Plus Two" {% if client.qualification == "Plus Two" %}selected{% endif %}>Plus Two</option>
+                            <option value="Diploma" {% if client.qualification == "Diploma" %}selected{% endif %}>Diploma</option>
+                            <option value="UG" {% if client.qualification == "UG" %}selected{% endif %}>UG</option>
+                            <option value="PG" {% if client.qualification == "PG" %}selected{% endif %}>PG</option>
+                            <option value="PhD" {% if client.qualification == "PhD" %}selected{% endif %}>PhD</option>
+                            <option value="Other" {% if client.qualification == "Other" %}selected{% endif %}>Other</option>
+                        </select>
+                        <small class="text-danger"></small>
+
+                    </div>
+
+                    <div class="form-group col-md-4 mt-3">
+                        <label>Profession</label>
+                        <input type="text" class="form-control" name="profession"
+                               value="{{ client.profession }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Aadhaar Number</label>
+                        <input type="text" class="form-control" name="aadhaar_number"
+                               pattern="[0-9]{12}" value="{{ client.aadhaar_number }}">
+                        <small class="text-danger"></small>
+
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>PAN Number</label>
+                        <input type="text" class="form-control" name="pan_number"
+                               pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" value="{{ client.pan_number }}">
+                        <small class="text-danger"></small>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ADDITIONAL DETAILS ================= -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Additional Details</h5>
+                <div class="form-row">
+
+                    <div class="form-group col-md-6">
+                        <label>Select Campaign</label>
+                        <select name="campaign" class="form-control">
+                            <option value="">-- Select --</option>
+                            {% for c in campaigns %}
+                            <option value="{{ c.id }}"
+                                {% if client.campaign_id == c.id %}selected{% endif %}>
+                                {{ c.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Income Level</label>
+                        <input type="text" class="form-control" name="income_level"
+                               value="{{ client.income_level }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>Marital Status</label>
+                        <select name="marital_status" class="form-control">
+                            <option value="Single" {% if client.marital_status == "Single" %}selected{% endif %}>Single</option>
+                            <option value="Married" {% if client.marital_status == "Married" %}selected{% endif %}>Married</option>
+                            <option value="Other" {% if client.marital_status == "Other" %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Do you have kids?</label>
+                        <select name="has_kids" class="form-control">
+                            <option value="True" {% if client.has_kids %}selected{% endif %}>Yes</option>
+                            <option value="False" {% if not client.has_kids %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Referral Source</label>
+                        <select name="referral_source" class="form-control">
+                            <option value="Friend" {% if client.referral_source == "Friend" %}selected{% endif %}>Friend</option>
+                            <option value="Social Media" {% if client.referral_source == "Social Media" %}selected{% endif %}>Social Media</option>
+                            <option value="Advertisement" {% if client.referral_source == "Advertisement" %}selected{% endif %}>Advertisement</option>
+                            <option value="Agent" {% if client.referral_source == "Agent" %}selected{% endif %}>Agent</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row mt-3">
+                    <div class="form-group col-md-6">
+                        <label>Existing Policy?</label>
+                        <select name="existing_policy" class="form-control">
+                            <option value="True" {% if client.existing_policy %}selected{% endif %}>Yes</option>
+                            <option value="False" {% if not client.existing_policy %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6">
+                        <label>Service Satisfaction</label>
+                        <input type="text" class="form-control" name="service_satisfaction"
+                               value="{{ client.service_satisfaction }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= INSURANCE DETAILS ================= -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Insurance Details</h5>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label>Visited Policy</label>
+                        <input type="text" class="form-control" name="visited_policy"
+                               value="{{ client.visited_policy }}">
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Willing to Purchase?</label>
+                        <select name="willing_to_purchase" class="form-control">
+                            <option value="True" {% if client.willing_to_purchase %}selected{% endif %}>Yes</option>
+                            <option value="False" {% if not client.willing_to_purchase %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Willing to Switch?</label>
+                        <select name="willing_to_switch" class="form-control">
+                            <option value="True" {% if client.willing_to_switch %}selected{% endif %}>Yes</option>
+                            <option value="False" {% if not client.willing_to_switch %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row mt-3">
+                    <div class="form-group col-md-4">
+                        <label>Share Previous Insurance?</label>
+                        <select name="willing_to_share_previous" class="form-control">
+                            <option value="True" {% if client.willing_to_share_previous %}selected{% endif %}>Yes</option>
+                            <option value="False" {% if not client.willing_to_share_previous %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Previous Policy No</label>
+                        <input type="text" class="form-control" name="previous_policy_number"
+                               value="{{ client.previous_policy_number }}">
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label>Previous Policy Name</label>
+                        <input type="text" class="form-control" name="previous_policy_name"
+                               value="{{ client.previous_policy_name }}">
+                    </div>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label>Previous Policy Claimed?</label>
+                    <select name="previous_claimed" class="form-control">
+                        <option value="True" {% if client.previous_claimed %}selected{% endif %}>Yes</option>
+                        <option value="False" {% if not client.previous_claimed %}selected{% endif %}>No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SUMMARY ================= -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Summary</h5>
+                <div class="form-group">
+                    <label>Customer Preferences</label>
+                    <textarea class="form-control" name="customer_preferences">{{ client.customer_preferences }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Agent Note</label>
+                    <textarea class="form-control" name="agent_note">{{ client.agent_note }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success px-5">Update Client</button>
+        </div>
+
+    </form>
+</div>
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Insurances</h5>
+                <a href="#">General Insurance</a>
+                <a href="#">Life Insurance</a>
+                <a href="#">Term Insurance</a>
+                <a href="#">Investment</a>
+                <a href="#">Health Insurance</a>
+                <a href="#">Other Insurance</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Calculators</h5>
+                <a href="#">Income Tax Calculator</a>
+                <a href="#">Term Insurance Calculator</a>
+                <a href="#">LIC Calculator</a>
+                <a href="#">Life Insurance Calculator</a>
+                <a href="#">Health Insurance Calculator</a>
+                <a href="#">Travel Insurance Calculator</a>
+                <a href="#">Car Insurance Calculator</a>
+                <a href="#">Bike Insurance Calculator</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Resources</h5>
+                <a href="#">Articles</a>
+                <a href="#">Customer Reviews</a>
+                <a href="#">Insurance Companies</a>
+                <a href="#">Newsroom</a>
+                <a href="#">Awards</a>
+                <a href="#">PB Life</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Company</h5>
+                <a href="#">About us</a>
+                <a href="#">Sitemap</a>
+                <a href="#">Career</a>
+                <a href="#">Legal & Admin policies</a>
+                <a href="#">INSP</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Verify your Advisor</a>
+                <a href="#">Investors Relation</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Media</h5>
+                <a href="#">Press Releases</a>
+                <a href="#">Photo Gallery</a>
+                <a href="#">Event Highlights</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>References</h5>
+                <a href="#">Public Notice</a>
+                <a href="#">Important Links</a>
+                <a href="#">Retirees Lounge</a>
+                <a href="#">Familiarization Program</a>
+                <a href="#">Financial Inclusion</a>
+                <a href="#">Holiday Calendar</a>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="payment-card">
+            <h5>Payment Methods</h5>
+            <div class="payment-logo">
+                <img src="{% static 'images/p1.jpg' %}">
+                <img src="{% static 'images/p2.png' %}">
+                <img src="{% static 'images/p3.webp' %}">
+                <img src="{% static 'images/p4.webp' %}">
+                <img src="{% static 'images/p5.webp' %}">
+                <img src="{% static 'images/p6.png' %}">
+            </div>
+        </div>
+
+        <p class="text-center fw-bold mt-3 mb-0">
+            &copy; Copyright 2008–2026 insurance.com All rights reserved.
+        </p>
+    </div>
+</footer>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("clientForm");
+    if (!form) return;
+
+    const clientIdEl = document.getElementById("client_id");
+    const clientId = clientIdEl ? clientIdEl.value : "";
+
+    /* ================= HELPERS ================= */
+
+    function getErrorEl(input) {
+        // Always find small.error or small.text-danger in same .form-group
+        return input.closest(".form-group")?.querySelector("small.text-danger, small.error");
+    }
+
+    function showError(input, message) {
+        const small = getErrorEl(input);
+        if (small) small.innerText = message;
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        input.dataset.valid = "false";
+    }
+
+    function showSuccess(input) {
+        const small = getErrorEl(input);
+        if (small) small.innerText = "";
+        input.classList.remove("is-invalid");
+        input.classList.add("is-valid");
+        input.dataset.valid = "true";
+    }
+
+    function clearState(input) {
+        const small = getErrorEl(input);
+        if (small) small.innerText = "";
+        input.classList.remove("is-invalid", "is-valid");
+        delete input.dataset.valid;
+    }
+
+    /* ================= BASIC VALIDATORS ================= */
+
+    function checkLength(input, min) {
+        if (input.value.trim().length < min) {
+            showError(input, `Minimum ${min} characters required`);
+            return false;
+        }
+        return true;
+    }
+
+    function checkPattern(input, regex, message) {
+        if (!regex.test(input.value.trim())) {
+            showError(input, message);
+            return false;
+        }
+        return true;
+    }
+
+    function checkAge(input) {
+        const age = parseInt(input.value);
+        if (isNaN(age) || age < 18) {
+            showError(input, "Age must be 18 or above");
+            return false;
+        }
+        return true;
+    }
+
+    /* ================= DUPLICATE CHECK (ADD + EDIT SAFE) ================= */
+
+    function checkExists(input) {
+        const field = input.name;
+        const value = input.value.trim();
+        if (!value) return;
+
+        let url = `/check-client-exists/?field=${field}&value=${value}`;
+        if (clientId) url += `&client_id=${clientId}`;
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                if (data.exists) {
+                    showError(input, `${field.replace("_", " ")} already exists`);
+                } else {
+                    showSuccess(input);
+                }
+            })
+            .catch(() => {});
+    }
+
+    /* ================= FIELD REFERENCES ================= */
+
+    const name = form.querySelector("[name='name']");
+    const phone = form.querySelector("[name='phone']");
+    const address = form.querySelector("[name='address']");
+    const dob = form.querySelector("[name='dob']");
+    const age = form.querySelector("[name='age']");
+    const qualification = form.querySelector("[name='qualification']");
+    const aadhaar = form.querySelector("[name='aadhaar_number']");
+    const pan = form.querySelector("[name='pan_number']");
+
+    /* ================= LIVE VALIDATION ================= */
+
+    name.addEventListener("input", () => {
+        if (!name.value) return clearState(name);
+        if (checkLength(name, 3)) showSuccess(name);
+    });
+
+    phone.addEventListener("input", () => {
+        if (!phone.value) return clearState(phone);
+        if (checkPattern(phone, /^[0-9]{10}$/, "Enter valid 10 digit phone number")) {
+            checkExists(phone);
+        }
+    });
+
+    address.addEventListener("input", () => {
+        if (!address.value) return clearState(address);
+        showSuccess(address);
+    });
+
+    dob.addEventListener("change", () => {
+        if (!dob.value) return clearState(dob);
+        showSuccess(dob);
+    });
+
+    age.addEventListener("input", () => {
+        if (!age.value) return clearState(age);
+        if (checkAge(age)) showSuccess(age);
+    });
+
+    qualification.addEventListener("change", () => {
+        if (!qualification.value) return clearState(qualification);
+        showSuccess(qualification);
+    });
+
+    aadhaar.addEventListener("input", () => {
+        if (!aadhaar.value) return clearState(aadhaar);
+        if (checkPattern(aadhaar, /^[0-9]{12}$/, "Aadhaar must be 12 digits")) {
+            checkExists(aadhaar);
+        }
+    });
+
+    pan.addEventListener("input", () => {
+        pan.value = pan.value.toUpperCase();
+        if (!pan.value) return clearState(pan);
+        if (checkPattern(pan, /^[A-Z]{5}[0-9]{4}[A-Z]$/, "PAN format: ABCDE1234F")) {
+            checkExists(pan);
+        }
+    });
+
+    /* ================= PAGE LOAD (EDIT SUPPORT) ================= */
+
+    [name, phone, address, dob, age, qualification, aadhaar, pan].forEach(input => {
+        if (!input || !input.value) return;
+
+        if (input === name) checkLength(name, 3) && showSuccess(name);
+        if (input === phone) checkPattern(phone, /^[0-9]{10}$/) && checkExists(phone);
+        if (input === address) showSuccess(address);
+        if (input === dob) showSuccess(dob);
+        if (input === age) checkAge(age) && showSuccess(age);
+        if (input === qualification) showSuccess(qualification);
+        if (input === aadhaar) checkPattern(aadhaar, /^[0-9]{12}$/) && checkExists(aadhaar);
+        if (input === pan) checkPattern(pan, /^[A-Z]{5}[0-9]{4}[A-Z]$/) && checkExists(pan);
+    });
+
+    /* ================= SUBMIT VALIDATION ================= */
+
+    form.addEventListener("submit", function (e) {
+        let valid = true;
+
+        if (!checkLength(name, 3)) valid = false;
+        if (!checkPattern(phone, /^[0-9]{10}$/)) valid = false;
+        if (!address.value) { showError(address, "Address is required"); valid = false; }
+        if (!dob.value) { showError(dob, "DOB is required"); valid = false; }
+        if (!checkAge(age)) valid = false;
+        if (!qualification.value) { showError(qualification, "Qualification required"); valid = false; }
+        if (!checkPattern(aadhaar, /^[0-9]{12}$/)) valid = false;
+        if (!checkPattern(pan, /^[A-Z]{5}[0-9]{4}[A-Z]$/)) valid = false;
+
+        // prevent submit if any input has data-valid false
+        form.querySelectorAll("[data-valid='false']").forEach(() => valid = false);
+
+        if (!valid) e.preventDefault();
+    });
+
+});
+</script>
+
+
+</body>
+</html>

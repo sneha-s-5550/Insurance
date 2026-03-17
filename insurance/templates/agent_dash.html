@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Insurance</title>
+
+    {% load static %}
+
+    <!-- Bootstrap 5 ONLY -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body{
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar{
+            background-color: lightskyblue;
+        }
+        .navbar-brand{
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        .nav-link{
+            color: black !important;
+            font-weight: 600;
+        }
+        .careers-section {
+  background-color: #f8f9fa;
+}
+
+.careers-title {
+  font-weight: 600;
+}
+
+.career-item {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.career-item:hover {
+  transform: translateY(-5px);
+}
+
+.icon-circle {
+  width: 70px;
+  height: 70px;
+  background: darkblue;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 28px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 576px) {
+  .career-item {
+    padding: 20px;
+  }
+
+  .icon-circle {
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+  }
+}
+
+
+      /* Agent Sections */
+.agent-section,
+.agent-why-section {
+    padding: 60px 15px;
+    background-color: #f8f9fa; /* light background */
+}
+
+.agent-section h2,
+.agent-why-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: darkblue;
+    margin-bottom: 20px;
+}
+
+.agent-section h3,
+.agent-why-section h3 {
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.agent-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    background-color: darkblue;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.intro-text {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.agent-section h6,
+.agent-why-section h6 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.agent-section ul,
+.agent-why-section ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .agent-section h2,
+    .agent-why-section h2 {
+        font-size: 2.25rem;
+    }
+    .agent-section h3,
+    .agent-why-section h3 {
+        font-size: 1.5rem;
+    }
+    .agent-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .row.align-items-start {
+        flex-direction: column; /* stack columns */
+        text-align: center; /* center text */
+    }
+
+    .col-md-2,
+    .col-md-8 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .intro-text {
+        text-align: center;
+    }
+
+    .agent-section ul,
+    .agent-why-section ul {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .agent-section ul li,
+    .agent-why-section ul li {
+        position: relative;
+        padding-left: 20px;
+        text-align: left;
+    }
+
+    .agent-section ul li::before,
+    .agent-why-section ul li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #0d6efd;
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .agent-section h2,
+    .agent-why-section h2 {
+        font-size: 1.75rem;
+    }
+    .agent-section h3,
+    .agent-why-section h3 {
+        font-size: 1.25rem;
+    }
+    .agent-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    .intro-text {
+        font-size: 0.95rem;
+    }
+}
+
+
+
+        /* Footer */
+        .footer{
+            background-color: lightskyblue;
+            padding: 40px 0;
+        }
+        .footer h5{
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .footer a{
+            color: black;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .footer a:hover{
+            text-decoration: underline;
+        }
+
+        /* Payment */
+        .payment-card{
+            text-align: center;
+        }
+        .payment-logo{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .payment-logo img{
+            width: 80px;
+            height: auto;
+        }
+
+        @media (max-width: 768px){
+            .footer .col-md-2{
+                text-align: left;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand fw-bold text-dark" href="#">
+            <img src="{% static 'images/logos.png' %}" height="45" width="45" class="rounded">
+            INSURANCE
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a href="{% url 'agent_dash' %}" class="nav-link">Dashboard</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'add_client' %}" class="nav-link">Add Client</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'client_card_view' %}" class="nav-link">View Client</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'view_campaignlist' %}" class="nav-link">View Campaigns</a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{% url 'agent_profile_view' %}" class="nav-link">Profile</a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'resetpage' %}" class="btn btn-warning">
+                        <i class="fa-solid fa-user"></i> RESET
+                    </a>
+                </li>
+
+                <li class="nav-item ms-2">
+                    <a href="{% url 'logout' %}" class="btn btn-primary">
+                        <i class="fa-solid fa-user"></i> LOGOUT
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav><br>
+
+
+<!-- Careers Section -->
+<section class="careers-section py-5">
+  <div class="container">
+
+    <!-- Title -->
+    <h2 class="text-center mb-5 careers-title">Careers</h2>
+
+    <div class="row justify-content-center">
+
+      <!-- Job Openings -->
+      <div class="col-12 col-lg-6 mb-4">
+        <div class="career-item text-center h-100 p-4">
+          <div class="icon-circle mb-3">
+            <i class="fa-solid fa-users"></i>
+          </div>
+
+          <h5 class="mb-3">Job Openings</h5>
+
+          <p class="mb-0">
+            At Liberty General Insurance, we have a team of dynamic individuals,
+            united by a common dream of success. Explore our openings to find
+            roles that suit your skill set the best.
+          </p>
+        </div>
+      </div>
+
+      <!-- Learning & Development -->
+      <div class="col-12 col-lg-6 mb-4">
+        <div class="career-item text-center h-100 p-4">
+          <div class="icon-circle mb-3">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+
+          <h5 class="mb-3">Learning and Development</h5>
+
+          <p class="mb-0">
+            The field in which we work is constantly evolving. We challenge
+            ourselves to set higher benchmarks and stay ahead in this dynamic
+            industry.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<img src="https://www.pnbmetlife.com/content/dam/pnb-metlife/homepage-banner/PNBMetLife_Website%20Banner_MidCapFund_Desktop_1440x300.webp" class="img-fluid w-100">
+
+<!-- Agent Section -->
+<section class="agent-section">
+  <div class="container-fluid p-0">
+    <h2 class="text-center mb-4">CORPORATE AGENTS</h2>
+    <h3 class="text-center mb-4">Why become our agent?</h3>
+    <div class="row align-items-start justify-content-center">
+      <div class="col-12 col-md-2 text-center mb-4 mb-md-0">
+        <div class="agent-icon"><i class="fa-solid fa-users"></i></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <p class="intro-text">With a vision of building long-term and successful relationships, a focus on delivering high-value business outcomes, emphasis on team building, and a deep understanding of human experience infused into every aspect of the company, LGI offers a number of reasons to become an agent with us:</p>
+        <h6>Our Lineage:</h6>
+        <ul>
+          <li>Large network of offices, a wide range of products, and competitive pricing</li>
+          <li>Brand recognition</li>
+        </ul>
+        <h6>Our Team:</h6>
+        <ul>
+          <li>A cohesive understanding of human elements that makes employee experiences valuable</li>
+          <li>Embryonic culture that encourages professional development</li>
+          <li>Regular training, performance management, career counseling, and other practices</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Individual Agent Section -->
+<section class="agent-why-section">
+  <div class="container-fluid p-0">
+    <h2 class="text-center mb-4">INDIVIDUAL AGENTS</h2>
+    <h3 class="text-center mb-4">Why become our agent?</h3>
+    <div class="row align-items-start justify-content-center">
+      <div class="col-12 col-md-2 text-center mb-4 mb-md-0">
+        <div class="agent-icon"><i class="fa-solid fa-users"></i></div>
+      </div>
+      <div class="col-12 col-md-8">
+        <p>At LGI, we are actively looking to create long-term and successful relationships by keeping interactions timely, simple and transparent. We aim to become a leading non-life player driven by innovative ideas, strategies and streamlined technology support.</p>
+        <p>Backed by a competent team of insurance professionals, robust products and services, we cater to the needs of different segments of retail customers and businesses. Our professionalism, independence and our commitment to putting our client's interests first has made us one of the key players in the general insurance market.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Insurances</h5>
+                <a href="#">General Insurance</a>
+                <a href="#">Life Insurance</a>
+                <a href="#">Term Insurance</a>
+                <a href="#">Investment</a>
+                <a href="#">Health Insurance</a>
+                <a href="#">Other Insurance</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Calculators</h5>
+                <a href="#">Income Tax Calculator</a>
+                <a href="#">Term Insurance Calculator</a>
+                <a href="#">LIC Calculator</a>
+                <a href="#">Life Insurance Calculator</a>
+                <a href="#">Health Insurance Calculator</a>
+                <a href="#">Travel Insurance Calculator</a>
+                <a href="#">Car Insurance Calculator</a>
+                <a href="#">Bike Insurance Calculator</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Resources</h5>
+                <a href="#">Articles</a>
+                <a href="#">Customer Reviews</a>
+                <a href="#">Insurance Companies</a>
+                <a href="#">Newsroom</a>
+                <a href="#">Awards</a>
+                <a href="#">PB Life</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Company</h5>
+                <a href="#">About us</a>
+                <a href="#">Sitemap</a>
+                <a href="#">Career</a>
+                <a href="#">Legal & Admin policies</a>
+                <a href="#">INSP</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Verify your Advisor</a>
+                <a href="#">Investors Relation</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>Media</h5>
+                <a href="#">Press Releases</a>
+                <a href="#">Photo Gallery</a>
+                <a href="#">Event Highlights</a>
+            </div>
+
+            <div class="col-md-2 col-sm-6">
+                <h5>References</h5>
+                <a href="#">Public Notice</a>
+                <a href="#">Important Links</a>
+                <a href="#">Retirees Lounge</a>
+                <a href="#">Familiarization Program</a>
+                <a href="#">Financial Inclusion</a>
+                <a href="#">Holiday Calendar</a>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="payment-card">
+            <h5>Payment Methods</h5>
+            <div class="payment-logo">
+                <img src="{% static 'images/p1.jpg' %}">
+                <img src="{% static 'images/p2.png' %}">
+                <img src="{% static 'images/p3.webp' %}">
+                <img src="{% static 'images/p4.webp' %}">
+                <img src="{% static 'images/p5.webp' %}">
+                <img src="{% static 'images/p6.png' %}">
+            </div>
+        </div>
+
+        <p class="text-center fw-bold mt-3 mb-0">
+            &copy; Copyright 2008–2026 insurance.com All rights reserved.
+        </p>
+    </div>
+</footer>
+
+
+
+</body>
+</html>
