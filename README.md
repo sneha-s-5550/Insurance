@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Insurance Management System
 
 ## 📌 Description
@@ -36,3 +37,6 @@ This is an Insurance Management System developed to manage insurance policies, c
 
 ## 👩‍💻 Author
 Sneha S
+=======
+# Insurance
+>>>>>>> 45edc4b1e285288b32af9a83bde911cf0c25136e
